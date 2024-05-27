@@ -7,12 +7,12 @@ const getFilterData = async (req, res) => {
       topic,
       sector,
       region,
-      pestel,
+      pestle,
       source,
       country,
       likelihood,
       page = 1,
-      limit = 10,
+      limit = 6,
       sortBy = "likelihood",
       sortOrder = 0,
     } = req.query;
@@ -22,7 +22,7 @@ const getFilterData = async (req, res) => {
       ...(topic && { topic }),
       ...(sector && { sector }),
       ...(region && { region }),
-      ...(pestel && { pestel }),
+      ...(pestle && { pestle }),
       ...(source && { source }),
       ...(country && { country }),
       ...(likelihood && { likelihood: { $gte: likelihood } }),
@@ -31,12 +31,19 @@ const getFilterData = async (req, res) => {
     let sort = {};
     if (sortBy) sort[sortBy] = sortOrder === 1 ? 1 : -1;
 
+    const totalDocuments = await Data.countDocuments(filter);
+
     const data = await Data.find(filter)
       .sort(sort)
       .skip((page - 1) * limit)
       .limit(parseInt(limit));
 
-    return res.status(200).json(data);
+    const totalPages = Math.ceil(totalDocuments / limit);
+
+    return res.status(200).json({
+      data,
+      totalPages,
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

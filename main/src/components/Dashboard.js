@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Panel from "./sidePanel/Panel";
-import { CiSearch } from "react-icons/ci";
 import axios from "axios";
 import Filter from "./DashboardComp/Filter";
 
@@ -19,14 +18,15 @@ function Dashboard() {
     pestel: "",
     source: "",
     country: "",
-    likelihood: "",
+    likelihood: 0,
     page: 1,
-    limit: 10,
+    limit: 6,
     sortBy: "likelihood",
     sortOrder: 0,
   });
 
-  const [filterPage, setFilterPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [paneOpen, setPaneOpen] = useState(1);
   const [filterData, setFilterData] = useState();
 
   useEffect(() => {
@@ -67,7 +67,9 @@ function Dashboard() {
           `${process.env.REACT_APP_API_URL}/api/v1/getdata?${queryParams}`
         );
 
-        console.log(response.data);
+        console.log(response);
+        setFilterData(response.data.data);
+        setTotalPages(response.data.totalPages);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -76,19 +78,23 @@ function Dashboard() {
     fetchData();
   }, [filter]);
 
+  useEffect(() => console.log(paneOpen), [paneOpen]);
+
   return (
-    <div className="flex items-start ">
-      <Panel filter={filter} setFilter={setFilter} />
-      <div className="flex-grow">
-        <nav className=" flex select-none justify-center items-center gap-2 p-2 h-auto ">
-          <input
-            className=" outline outline-slate-300 focus:outline-2 focus:outline-slate-700 transition-all duration-500 rounded-md w-full font-poppins p-2 px-4"
-            placeholder="Search"
-          ></input>
-          <CiSearch className=" text-2xl cursor-pointer" />
-        </nav>
-        <Filter />
-      </div>
+    <div className="flex items-start bg-slate-700">
+      <Panel
+        paneOpen={paneOpen}
+        setPaneOpen={setPaneOpen}
+        filter={filter}
+        setFilter={setFilter}
+      />
+      <Filter
+        totalPages={totalPages}
+        filterData={filterData}
+        filter={filter}
+        setFilter={setFilter}
+        setPaneOpen={setPaneOpen}
+      />
     </div>
   );
 }
