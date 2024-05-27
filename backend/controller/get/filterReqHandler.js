@@ -13,8 +13,8 @@ const getFilterData = async (req, res) => {
       likelihood,
       page = 1,
       limit = 10,
-      sortBy,
-      sortOrder = "asc",
+      sortBy = "likelihood",
+      sortOrder = 0,
     } = req.query;
 
     const filter = {
@@ -25,13 +25,11 @@ const getFilterData = async (req, res) => {
       ...(pestel && { pestel }),
       ...(source && { source }),
       ...(country && { country }),
-      ...(likelihood && { likelihood }),
+      ...(likelihood && { likelihood: { $gte: likelihood } }),
     };
 
     let sort = {};
-    if (sortBy) 
-      sort[sortBy] = sortOrder === "desc" ? -1 : 1;
-    
+    if (sortBy) sort[sortBy] = sortOrder === 1 ? 1 : -1;
 
     const data = await Data.find(filter)
       .sort(sort)
