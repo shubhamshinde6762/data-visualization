@@ -1,7 +1,8 @@
 import React from "react";
 import { IoLocationOutline } from "react-icons/io5";
 import { IoCloseOutline } from "react-icons/io5";
-import Piechart from "./Piechart"; 
+import Piechart from "./Piechart";
+import SingleValueChart from "./SingleValueChart";
 
 const formatDate = (dateString) => {
   const options = { year: "numeric", month: "long", day: "numeric" };
@@ -10,7 +11,7 @@ const formatDate = (dateString) => {
 
 const DetailedCard = ({ selection, setSelection }) => {
   return (
-    <div className="fixed overflow-hidden duration-300 transition-all top-0 left-0 bg-stone-900 bg-opacity-35 flex justify-center items-center h-screen w-full max-w-screen">
+    <div className="fixed overflow-hidden xs:overflow-scroll duration-300 transition-all top-0 left-0 bg-stone-900 bg-opacity-35 flex justify-center items-center min-h-screen w-full max-w-screen">
       <div className="max-w-[1000px] transition-all p-12 flex flex-col gap-6 xs:p-3 duration-300 relative w-[90%]  max-h-[90%] rounded-xl bg-slate-900">
         <IoCloseOutline
           onClick={() => setSelection()}
@@ -47,12 +48,23 @@ const DetailedCard = ({ selection, setSelection }) => {
           </div>
         </div>
 
-        <div className="flex gap-2 xs:flex-wrap items-center">
-          {selection?.likelihood !== undefined && (
-            <div className="flex-grow flex justify-end w-full mt-4">
-              <Piechart likelihood={selection.likelihood} />
-            </div>
-          )}
+        <div className="flex gap-2 xs:flex-wrap items-center justify-between">
+          <div className="flex gap-2 xs:flex-wrap-reverse items-center">
+            {selection?.likelihood !== undefined && (
+              <div className="flex-grow flex justify-end w-full mt-4">
+                <Piechart likelihood={selection.likelihood} />
+              </div>
+            )}
+            {selection?.intensity !== undefined &&
+              selection?.relevance !== undefined && (
+                <div className="flex-grow flex -translate-y-5 w-full mt-4">
+                  <SingleValueChart
+                    intensity={selection.intensity}
+                    relevance={selection.relevance}
+                  />
+                </div>
+              )}
+          </div>
           <div className="w-fit min-w-[280px] sx:min-w-0 text-sm flex flex-col text-right">
             {selection?.source && (
               <i className="text-sm font-lora">{selection.source}</i>
