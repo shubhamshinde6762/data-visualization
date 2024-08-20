@@ -1,7 +1,3 @@
-Here's a concise GitHub README for your MERN project named "DataVisualization":
-
----
-
 # DataVisualization 📊
 
 A MERN stack application for creating and displaying dynamic, interactive data visualizations.
@@ -44,10 +40,3 @@ A MERN stack application for creating and displaying dynamic, interactive data v
 2. Add your data sources and configure visualizations.
 3. Explore the interactive charts!
 
-## License
-
-This project is licensed under the MIT License.
-
----
-
-Feel free to customize this further to match your project's specifics!
